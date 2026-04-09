@@ -1,0 +1,96 @@
+{
+  "version": "1.0.0",
+  "category": "Settings",
+  "description": "settings.json 및 종합 설정 진단 룰셋",
+  "rules": [
+    {
+      "id": "SET-001",
+      "name": "settings.json JSON 유효성",
+      "severity": "critical",
+      "check": "json_valid",
+      "target": "~/.claude/settings.json",
+      "advice": "settings.json에 JSON 구문 오류가 있습니다. 수동 편집 시 쉼표, 따옴표를 확인하세요. Claude Code가 정상 동작하지 않을 수 있습니다."
+    },
+    {
+      "id": "SET-002",
+      "name": "모델 설정 확인",
+      "severity": "info",
+      "check": "json_key_exists",
+      "target": "~/.claude/settings.json",
+      "key": "model",
+      "advice": "기본 모델을 명시적으로 설정하면 의도한 모델로 일관되게 동작합니다."
+    },
+    {
+      "id": "SET-003",
+      "name": "permissions.allow 과다",
+      "severity": "warning",
+      "check": "permissions_count",
+      "target": "~/.claude/settings.local.json",
+      "threshold": {
+        "warning": 50,
+        "critical": 100
+      },
+      "advice": "허용 권한이 너무 많으면 의도치 않은 명령이 자동 실행될 수 있습니다. 최소 권한 원칙을 적용하여 필요한 권한만 허용하세요."
+    },
+    {
+      "id": "SET-004",
+      "name": "위험 명령어 허용 여부",
+      "severity": "critical",
+      "check": "dangerous_patterns",
+      "target": "~/.claude/settings.local.json",
+      "patterns": ["rm -rf", "sudo", "curl.*\\|.*sh", "wget.*\\|.*sh", "chmod 777", "> /dev/sda"],
+      "advice": "위험한 명령어가 자동 허용되어 있습니다. 실수로 파일 삭제나 시스템 손상이 발생할 수 있으므로 deny 목록으로 이동하세요."
+    },
+    {
+      "id": "SET-005",
+      "name": "deny 목록 설정",
+      "severity": "info",
+      "check": "json_key_exists",
+      "target": "~/.claude/settings.json",
+      "key": "deny",
+      "advice": "deny 목록에 위험 명령어(rm -rf *, sudo 등)를 등록하면 실수로 인한 피해를 방지할 수 있습니다."
+    },
+    {
+      "id": "SET-006",
+      "name": "플러그인 설치 상태",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/plugins/marketplaces/*/package.json",
+      "advice": "플러그인을 활용하면 Claude Code의 기능을 크게 확장할 수 있습니다. 유용한 플러그인: everything-claude-code, oh-my-claudecode 등."
+    },
+    {
+      "id": "SET-007",
+      "name": "memory 활용도",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/projects/*/memory/*.md",
+      "advice": "메모리 시스템을 활용하면 대화 간 컨텍스트를 유지할 수 있습니다. 중요한 프로젝트 정보, 피드백, 사용자 선호를 저장해보세요."
+    },
+    {
+      "id": "SET-008",
+      "name": "프로젝트별 설정 분리",
+      "severity": "info",
+      "check": "file_exists",
+      "target": "{CWD}/.claude/settings.local.json",
+      "advice": "프로젝트별 settings.local.json으로 프로젝트마다 다른 권한과 설정을 적용할 수 있습니다."
+    },
+    {
+      "id": "SET-009",
+      "name": "statusLine 설정",
+      "severity": "info",
+      "check": "json_key_exists",
+      "target": "~/.claude/settings.json",
+      "key": "statusLine",
+      "advice": "statusLine을 설정하면 Claude Code 하단에 유용한 정보(모델, 토큰 사용량 등)를 실시간 표시할 수 있습니다."
+    },
+    {
+      "id": "SET-010",
+      "name": "hooks 설정 여부",
+      "severity": "info",
+      "check": "json_key_exists",
+      "target": "~/.claude/settings.json",
+      "key": "hooks",
+      "advice": "hooks를 설정하면 도구 실행 전후에 자동 검증, 포맷팅, 알림 등을 수행할 수 있습니다."
+    }
+  ]
+}

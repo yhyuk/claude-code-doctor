@@ -1,0 +1,104 @@
+{
+  "version": "1.0.0",
+  "category": "CLAUDE.md",
+  "description": "CLAUDE.md 파일 품질 진단 룰셋",
+  "rules": [
+    {
+      "id": "CMD-001",
+      "name": "글로벌 CLAUDE.md 존재",
+      "severity": "critical",
+      "check": "file_exists",
+      "target": "~/.claude/CLAUDE.md",
+      "advice": "글로벌 CLAUDE.md를 생성하여 Claude Code에 기본 지시사항을 정의하세요. 이 파일이 없으면 Claude는 프로젝트 맥락 없이 동작합니다."
+    },
+    {
+      "id": "CMD-002",
+      "name": "프로젝트 CLAUDE.md 존재",
+      "severity": "warning",
+      "check": "file_exists",
+      "target": "{CWD}/CLAUDE.md",
+      "advice": "프로젝트별 CLAUDE.md를 생성하여 해당 프로젝트에 특화된 규칙을 정의하세요. 글로벌 설정만으로는 프로젝트별 맥락 전달이 부족합니다."
+    },
+    {
+      "id": "CMD-003",
+      "name": "글로벌 CLAUDE.md 크기 적정성",
+      "severity": "warning",
+      "check": "line_count",
+      "target": "~/.claude/CLAUDE.md",
+      "threshold": {
+        "warning": 500,
+        "critical": 1000
+      },
+      "advice": "CLAUDE.md가 너무 크면 매 대화마다 토큰을 낭비합니다. 핵심 지시사항만 남기고 상세 내용은 docs/ 폴더로 분리하세요."
+    },
+    {
+      "id": "CMD-004",
+      "name": "섹션 구조화 여부",
+      "severity": "warning",
+      "check": "has_headers",
+      "target": "~/.claude/CLAUDE.md",
+      "min_headers": 3,
+      "advice": "마크다운 헤더(#, ##)로 섹션을 구분하세요. 구조화된 CLAUDE.md는 Claude가 지시사항을 더 정확히 파악합니다."
+    },
+    {
+      "id": "CMD-005",
+      "name": "글로벌-프로젝트 중복 내용",
+      "severity": "warning",
+      "check": "duplicate_check",
+      "target_global": "~/.claude/CLAUDE.md",
+      "target_project": "{CWD}/CLAUDE.md",
+      "advice": "글로벌과 프로젝트 CLAUDE.md에 중복 내용이 있습니다. 공통 규칙은 글로벌에, 프로젝트 특화 규칙만 프로젝트 파일에 두세요."
+    },
+    {
+      "id": "CMD-006",
+      "name": "모호한 지시사항",
+      "severity": "info",
+      "check": "vague_terms",
+      "target": "~/.claude/CLAUDE.md",
+      "patterns": ["적절히", "필요시", "상황에 따라", "가능하면", "경우에 따라", "적당히", "알아서"],
+      "advice": "모호한 표현은 Claude가 임의로 해석합니다. '적절히' 대신 '최대 3개까지'처럼 구체적인 기준을 명시하세요."
+    },
+    {
+      "id": "CMD-007",
+      "name": "토큰 효율성 추정",
+      "severity": "info",
+      "check": "token_estimate",
+      "target": "~/.claude/CLAUDE.md",
+      "threshold": {
+        "info": 1000,
+        "warning": 3000
+      },
+      "advice": "CLAUDE.md의 예상 토큰 수가 높습니다. 매 대화 시작 시 이 토큰이 소비되므로, 불필요한 내용을 줄이면 비용을 절약할 수 있습니다."
+    },
+    {
+      "id": "CMD-008",
+      "name": "코드 블록 비중",
+      "severity": "info",
+      "check": "code_block_ratio",
+      "target": "~/.claude/CLAUDE.md",
+      "threshold": 50,
+      "advice": "코드 블록이 전체의 50%를 초과합니다. 예시 코드는 토큰을 많이 소비하므로, 핵심 예시만 남기고 나머지는 외부 파일로 분리하세요."
+    },
+    {
+      "id": "CMD-009",
+      "name": "외부 파일 참조 활용",
+      "severity": "info",
+      "check": "line_count",
+      "target": "~/.claude/CLAUDE.md",
+      "threshold": {
+        "warning": 300,
+        "critical": 600
+      },
+      "context": "external_ref",
+      "advice": "내용이 길다면 docs/ 폴더에 상세 문서를 분리하고 CLAUDE.md에서 참조하세요. Claude는 필요시 참조 파일을 읽을 수 있습니다."
+    },
+    {
+      "id": "CMD-010",
+      "name": ".claudeignore 존재",
+      "severity": "warning",
+      "check": "file_exists",
+      "target": "{CWD}/.claudeignore",
+      "advice": ".claudeignore 파일을 생성하여 불필요한 파일(node_modules, dist, .git 등)을 Claude의 탐색 범위에서 제외하세요. 컨텍스트 오염을 방지합니다."
+    }
+  ]
+}

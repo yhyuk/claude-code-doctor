@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "claude-code-doctor",
+  "version": "1.0.0",
+  "description": "Claude Code 설정 진단 및 맞춤 추천 도구",
+  "author": {
+    "name": "imform-mm-2101"
+  },
+  "homepage": "https://github.com/imform-mm-2101/claude-code-doctor",
+  "repository": "https://github.com/imform-mm-2101/claude-code-doctor",
+  "license": "MIT",
+  "keywords": [
+    "diagnostics",
+    "settings",
+    "best-practices",
+    "token-efficiency"
+  ],
+  "category": "workflow",
+  "strict": false
+}

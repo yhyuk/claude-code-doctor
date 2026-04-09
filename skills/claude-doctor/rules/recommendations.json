@@ -1,0 +1,175 @@
+{
+  "version": "1.0.0",
+  "description": "프로젝트 타입별 CLAUDE.md 추천 룰셋",
+  "project_types": {
+    "nextjs": {
+      "label": "Next.js",
+      "detect_files": ["next.config.js", "next.config.mjs", "next.config.ts"],
+      "recommended_sections": [
+        {
+          "id": "REC-NEXTJS-001",
+          "section": "컴포넌트 규칙",
+          "description": "React 컴포넌트 네이밍, Server/Client 컴포넌트 구분 가이드",
+          "keywords": ["component", "컴포넌트", "use client", "server component"],
+          "example": "## 컴포넌트 규칙\n- Server Component를 기본으로 사용, 'use client'는 인터랙션 필요시만\n- 컴포넌트 파일명: PascalCase (예: UserProfile.tsx)\n- 페이지 컴포넌트: page.tsx (App Router 컨벤션)\n- 레이아웃: layout.tsx"
+        },
+        {
+          "id": "REC-NEXTJS-002",
+          "section": "라우팅 규칙",
+          "description": "App Router 기반 라우팅 컨벤션 및 파일 구조",
+          "keywords": ["routing", "라우팅", "app router", "route"],
+          "example": "## 라우팅 규칙\n- App Router 사용 (app/ 디렉토리)\n- 동적 라우트: [param] 폴더명 사용\n- API Routes: app/api/ 하위에 route.ts\n- 미들웨어: middleware.ts (루트)"
+        },
+        {
+          "id": "REC-NEXTJS-003",
+          "section": "데이터 패칭 패턴",
+          "description": "Server Action, fetch 캐싱 전략 정의",
+          "keywords": ["fetch", "data", "server action", "캐싱", "revalidate"],
+          "example": "## 데이터 패칭\n- Server Component에서 직접 fetch (async 컴포넌트)\n- Server Actions: 'use server' 지시어로 폼 처리\n- 캐싱: revalidatePath/revalidateTag 활용\n- 클라이언트 상태: zustand 또는 React Context"
+        }
+      ]
+    },
+    "react": {
+      "label": "React (Vite)",
+      "detect_files": ["vite.config.ts", "vite.config.js"],
+      "detect_content": { "file": "package.json", "pattern": "react" },
+      "recommended_sections": [
+        {
+          "id": "REC-REACT-001",
+          "section": "컴포넌트 규칙",
+          "description": "컴포넌트 구조, 네이밍, 상태 관리 패턴",
+          "keywords": ["component", "컴포넌트", "hooks", "state"],
+          "example": "## 컴포넌트 규칙\n- 함수형 컴포넌트만 사용\n- 파일명: PascalCase.tsx\n- 커스텀 훅: use 접두사 (예: useAuth)\n- Props 타입: interface로 정의"
+        },
+        {
+          "id": "REC-REACT-002",
+          "section": "상태 관리",
+          "description": "전역/로컬 상태 관리 전략",
+          "keywords": ["state", "상태", "redux", "zustand", "context"],
+          "example": "## 상태 관리\n- 로컬 상태: useState, useReducer\n- 전역 상태: zustand (또는 Redux Toolkit)\n- 서버 상태: React Query (TanStack Query)\n- URL 상태: useSearchParams"
+        }
+      ]
+    },
+    "nodejs": {
+      "label": "Node.js",
+      "detect_files": ["package.json"],
+      "recommended_sections": [
+        {
+          "id": "REC-NODE-001",
+          "section": "코드 스타일",
+          "description": "TypeScript/JavaScript 코딩 컨벤션",
+          "keywords": ["style", "스타일", "convention", "lint", "prettier"],
+          "example": "## 코드 스타일\n- TypeScript strict 모드 사용\n- ESLint + Prettier 적용\n- 세미콜론 사용 (또는 미사용 명시)\n- 들여쓰기: 2 spaces"
+        },
+        {
+          "id": "REC-NODE-002",
+          "section": "에러 핸들링",
+          "description": "에러 처리 패턴 및 로깅 전략",
+          "keywords": ["error", "에러", "exception", "logging"],
+          "example": "## 에러 핸들링\n- 커스텀 에러 클래스 사용\n- 전역 에러 핸들러 미들웨어\n- 구조화된 로깅 (winston/pino)"
+        }
+      ]
+    },
+    "spring": {
+      "label": "Spring Boot",
+      "detect_files": ["build.gradle", "build.gradle.kts", "pom.xml"],
+      "detect_content": { "file": "build.gradle", "pattern": "org.springframework" },
+      "recommended_sections": [
+        {
+          "id": "REC-SPRING-001",
+          "section": "레이어 구조",
+          "description": "Controller-Service-Repository 레이어 규칙",
+          "keywords": ["layer", "레이어", "controller", "service", "repository"],
+          "example": "## 레이어 구조\n- Controller: 요청/응답 처리만, 비즈니스 로직 금지\n- Service: 비즈니스 로직, 트랜잭션 관리\n- Repository: 데이터 액세스, JPA/QueryDSL\n- DTO: 레이어 간 데이터 전달, Entity 직접 노출 금지"
+        },
+        {
+          "id": "REC-SPRING-002",
+          "section": "네이밍 컨벤션",
+          "description": "Java/Kotlin 네이밍, DTO/Entity 구분 규칙",
+          "keywords": ["naming", "네이밍", "convention", "DTO", "entity"],
+          "example": "## 네이밍 컨벤션\n- 클래스: PascalCase\n- 메서드/변수: camelCase\n- 상수: UPPER_SNAKE_CASE\n- DTO: *Request, *Response 접미사\n- Entity: 도메인명 그대로 (User, Order)"
+        },
+        {
+          "id": "REC-SPRING-003",
+          "section": "테스트 전략",
+          "description": "단위/통합 테스트, 테스트 컨테이너 활용",
+          "keywords": ["test", "테스트", "junit", "mockito", "testcontainers"],
+          "example": "## 테스트 전략\n- 단위 테스트: JUnit 5 + Mockito\n- 통합 테스트: @SpringBootTest + TestContainers\n- API 테스트: MockMvc 또는 RestAssured\n- 커버리지 목표: 80%+"
+        }
+      ]
+    },
+    "python": {
+      "label": "Python",
+      "detect_files": ["requirements.txt", "pyproject.toml", "setup.py", "Pipfile"],
+      "recommended_sections": [
+        {
+          "id": "REC-PY-001",
+          "section": "코드 스타일",
+          "description": "PEP 8, 타입 힌트, 린팅 규칙",
+          "keywords": ["style", "pep8", "type hint", "ruff", "black", "mypy"],
+          "example": "## 코드 스타일\n- PEP 8 준수\n- 타입 힌트 필수 (mypy strict)\n- 포맷터: black 또는 ruff format\n- 린터: ruff\n- 독스트링: Google 스타일"
+        },
+        {
+          "id": "REC-PY-002",
+          "section": "프로젝트 구조",
+          "description": "패키지 구조, 의존성 관리",
+          "keywords": ["structure", "구조", "package", "dependency"],
+          "example": "## 프로젝트 구조\n- src/ 레이아웃 사용\n- 의존성: pyproject.toml (PEP 621)\n- 가상환경: venv 또는 poetry\n- 테스트: pytest"
+        }
+      ]
+    },
+    "rust": {
+      "label": "Rust",
+      "detect_files": ["Cargo.toml"],
+      "recommended_sections": [
+        {
+          "id": "REC-RUST-001",
+          "section": "에러 핸들링",
+          "description": "Result/Option 패턴, 커스텀 에러 타입",
+          "keywords": ["error", "Result", "Option", "anyhow", "thiserror"],
+          "example": "## 에러 핸들링\n- Result<T, E> 반환 필수 (unwrap 금지)\n- 라이브러리: thiserror로 커스텀 에러\n- 애플리케이션: anyhow로 에러 전파\n- ? 연산자 적극 활용"
+        }
+      ]
+    },
+    "go": {
+      "label": "Go",
+      "detect_files": ["go.mod"],
+      "recommended_sections": [
+        {
+          "id": "REC-GO-001",
+          "section": "프로젝트 레이아웃",
+          "description": "Go 표준 프로젝트 구조",
+          "keywords": ["layout", "structure", "구조", "cmd", "internal"],
+          "example": "## 프로젝트 레이아웃\n- cmd/: 메인 애플리케이션 진입점\n- internal/: 비공개 패키지\n- pkg/: 외부 공개 패키지\n- 에러 처리: errors.Is/As 활용, 센티널 에러 정의"
+        }
+      ]
+    },
+    "generic": {
+      "label": "Generic",
+      "detect_files": [],
+      "recommended_sections": [
+        {
+          "id": "REC-GEN-001",
+          "section": "코드 스타일",
+          "description": "프로젝트 언어/프레임워크에 맞는 코딩 컨벤션 정의",
+          "keywords": ["style", "스타일", "convention", "lint"],
+          "example": "## 코드 스타일\n- 사용 언어의 공식 스타일 가이드를 따릅니다\n- 린터/포맷터 설정을 명시합니다\n- 네이밍 규칙을 정의합니다"
+        },
+        {
+          "id": "REC-GEN-002",
+          "section": "테스트 전략",
+          "description": "테스트 프레임워크, 커버리지 목표 정의",
+          "keywords": ["test", "테스트", "coverage", "커버리지"],
+          "example": "## 테스트 전략\n- 테스트 프레임워크: (프로젝트에 맞게 명시)\n- 커버리지 목표: 80%+\n- 테스트 실행 명령어를 기술합니다"
+        },
+        {
+          "id": "REC-GEN-003",
+          "section": "Git 워크플로우",
+          "description": "브랜치 전략, 커밋 메시지 규칙",
+          "keywords": ["git", "branch", "commit", "커밋", "브랜치"],
+          "example": "## Git 워크플로우\n- 브랜치: main, develop, feature/*, fix/*\n- 커밋: Conventional Commits (feat:, fix:, docs:)\n- PR 필수, 코드 리뷰 후 머지"
+        }
+      ]
+    }
+  }
+}

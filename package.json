@@ -1,0 +1,29 @@
+{
+  "name": "claude-code-doctor",
+  "version": "1.0.0",
+  "description": "Claude Code 설정 진단 및 맞춤 추천 도구. CLAUDE.md, settings, skills, agents 등을 분석하여 토큰 효율성, 보안, 베스트 프랙티스를 진단하고 시각적 HTML 리포트를 생성합니다.",
+  "author": {
+    "name": "imform-mm-2101"
+  },
+  "homepage": "https://github.com/imform-mm-2101/claude-code-doctor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imform-mm-2101/claude-code-doctor.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "diagnostics",
+    "settings",
+    "best-practices",
+    "token-efficiency",
+    "claude-md",
+    "skills",
+    "agents",
+    "html-report"
+  ],
+  "files": [
+    "skills/",
+    ".claude-plugin/"
+  ]
+}

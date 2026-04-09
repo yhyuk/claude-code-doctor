@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "category": "스킬/에이전트",
+  "description": "커스텀 스킬, 에이전트, 커맨드 구성 진단 룰셋",
+  "rules": [
+    {
+      "id": "SKA-001",
+      "name": "커스텀 스킬 존재",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/skills/*/SKILL.md",
+      "advice": "커스텀 스킬을 만들면 반복 작업을 자동화할 수 있습니다. 자주 하는 작업(코드 리뷰, 테스트 생성 등)을 스킬로 만들어보세요."
+    },
+    {
+      "id": "SKA-002",
+      "name": "커스텀 에이전트 존재",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/agents/*.md",
+      "advice": "커스텀 에이전트를 정의하면 특정 역할(시니어 리뷰어, 보안 전문가 등)에 특화된 AI를 활용할 수 있습니다."
+    },
+    {
+      "id": "SKA-003",
+      "name": "커스텀 커맨드 존재",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/commands/*.md",
+      "advice": "커스텀 커맨드로 자주 사용하는 워크플로우를 슬래시 커맨드로 만들 수 있습니다."
+    },
+    {
+      "id": "SKA-004",
+      "name": "스킬 SKILL.md 유효성",
+      "severity": "warning",
+      "check": "skill_frontmatter",
+      "target": "~/.claude/skills/*/SKILL.md",
+      "required_fields": ["name", "description", "allowed-tools"],
+      "advice": "SKILL.md에 name, description, allowed-tools 필드가 필수입니다. 누락 시 스킬이 정상 동작하지 않을 수 있습니다."
+    },
+    {
+      "id": "SKA-005",
+      "name": "에이전트 프롬프트 크기",
+      "severity": "warning",
+      "check": "line_count",
+      "target": "~/.claude/agents/*.md",
+      "threshold": {
+        "warning": 500,
+        "critical": 1000
+      },
+      "advice": "에이전트 프롬프트가 너무 길면 에이전트 실행 시마다 토큰을 과다 소비합니다. 핵심 역할과 규칙만 남기세요."
+    },
+    {
+      "id": "SKA-006",
+      "name": "allowed-tools 과다 허용",
+      "severity": "warning",
+      "check": "allowed_tools_check",
+      "target": "~/.claude/skills/*/SKILL.md",
+      "max_tools": 10,
+      "advice": "allowed-tools에 너무 많은 도구를 허용하면 의도치 않은 동작이 발생할 수 있습니다. 필요한 도구만 최소한으로 허용하세요."
+    },
+    {
+      "id": "SKA-007",
+      "name": "학습된 스킬 활용",
+      "severity": "info",
+      "check": "count_items",
+      "target": "~/.claude/skills/learned/*.md",
+      "advice": "학습된 스킬(learned skills)은 반복 패턴을 자동으로 기억합니다. /learn-eval로 새 패턴을 추출해보세요."
+    }
+  ]
+}
