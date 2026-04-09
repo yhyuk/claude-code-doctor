@@ -1,7 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "Settings",
-  "description": "settings.json 및 종합 설정 진단 룰셋",
+  "description": "settings.json 및 종합 설정 진단 룰셋 (Anthropic 공식 문서 기반)",
+  "source": "https://code.claude.com/docs/en/settings.md, https://code.claude.com/docs/en/permissions.md, https://code.claude.com/docs/en/hooks.md",
   "rules": [
     {
       "id": "SET-001",
@@ -9,7 +10,9 @@
       "severity": "critical",
       "check": "json_valid",
       "target": "~/.claude/settings.json",
-      "advice": "settings.json에 JSON 구문 오류가 있습니다. 수동 편집 시 쉼표, 따옴표를 확인하세요. Claude Code가 정상 동작하지 않을 수 있습니다."
+      "source": "official",
+      "rationale": "settings.json은 Claude Code의 핵심 설정 파일입니다. JSON 구문 오류가 있으면 설정이 무시되어 Claude Code가 기본값으로 동작합니다.",
+      "advice": "settings.json에 JSON 구문 오류가 있습니다. 쉼표, 따옴표, 중괄호를 확인하세요."
     },
     {
       "id": "SET-002",
@@ -18,6 +21,8 @@
       "check": "json_key_exists",
       "target": "~/.claude/settings.json",
       "key": "model",
+      "source": "official",
+      "rationale": "공식 문서: settings.json에서 기본 모델을 지정할 수 있습니다. 명시하지 않으면 Claude Code 기본 모델이 사용됩니다.",
       "advice": "기본 모델을 명시적으로 설정하면 의도한 모델로 일관되게 동작합니다."
     },
     {
@@ -30,7 +35,9 @@
         "warning": 50,
         "critical": 100
       },
-      "advice": "허용 권한이 너무 많으면 의도치 않은 명령이 자동 실행될 수 있습니다. 최소 권한 원칙을 적용하여 필요한 권한만 허용하세요."
+      "source": "official",
+      "rationale": "공식 문서: 권한 설정은 Managed > Local > Project > User 우선순위로 적용됩니다. allow 목록이 과다하면 최소 권한 원칙에 위배되어 보안 위험이 증가합니다.",
+      "advice": "허용 권한이 너무 많습니다. 최소 권한 원칙을 적용하여 필요한 권한만 허용하세요."
     },
     {
       "id": "SET-004",
@@ -39,7 +46,9 @@
       "check": "dangerous_patterns",
       "target": "~/.claude/settings.local.json",
       "patterns": ["rm -rf", "sudo", "curl.*\\|.*sh", "wget.*\\|.*sh", "chmod 777", "> /dev/sda"],
-      "advice": "위험한 명령어가 자동 허용되어 있습니다. 실수로 파일 삭제나 시스템 손상이 발생할 수 있으므로 deny 목록으로 이동하세요."
+      "source": "best-practice",
+      "rationale": "Claude Code는 Bash 도구를 통해 명령을 실행할 수 있습니다. 위험 명령어가 자동 허용되면 실수로 파일 삭제나 시스템 손상이 발생할 수 있습니다.",
+      "advice": "위험한 명령어가 자동 허용되어 있습니다. deny 목록으로 이동하세요."
     },
     {
       "id": "SET-005",
@@ -48,6 +57,8 @@
       "check": "json_key_exists",
       "target": "~/.claude/settings.json",
       "key": "deny",
+      "source": "official",
+      "rationale": "공식 문서: permissions.deny로 특정 도구나 명령을 차단할 수 있습니다. Managed 설정의 deny는 하위에서 재정의 불가합니다.",
       "advice": "deny 목록에 위험 명령어(rm -rf *, sudo 등)를 등록하면 실수로 인한 피해를 방지할 수 있습니다."
     },
     {
@@ -56,41 +67,52 @@
       "severity": "info",
       "check": "count_items",
       "target": "~/.claude/plugins/marketplaces/*/package.json",
-      "advice": "플러그인을 활용하면 Claude Code의 기능을 크게 확장할 수 있습니다. 유용한 플러그인: everything-claude-code, oh-my-claudecode 등."
+      "source": "official",
+      "rationale": "공식 문서: 플러그인은 스킬, 에이전트, MCP 서버, 슬래시 커맨드를 번들로 제공합니다. .claude-plugin/ 디렉토리로 정의합니다.",
+      "advice": "플러그인을 활용하면 Claude Code의 기능을 크게 확장할 수 있습니다."
     },
     {
       "id": "SET-007",
-      "name": "memory 활용도",
-      "severity": "info",
-      "check": "count_items",
-      "target": "~/.claude/projects/*/memory/*.md",
-      "advice": "메모리 시스템을 활용하면 대화 간 컨텍스트를 유지할 수 있습니다. 중요한 프로젝트 정보, 피드백, 사용자 선호를 저장해보세요."
-    },
-    {
-      "id": "SET-008",
       "name": "프로젝트별 설정 분리",
       "severity": "info",
       "check": "file_exists",
       "target": "{CWD}/.claude/settings.local.json",
+      "source": "official",
+      "rationale": "공식 문서: 설정은 4단계 우선순위(Managed > Local > Project > User)로 적용됩니다. 프로젝트별 설정을 분리하면 프로젝트마다 다른 권한과 도구를 적용할 수 있습니다.",
       "advice": "프로젝트별 settings.local.json으로 프로젝트마다 다른 권한과 설정을 적용할 수 있습니다."
     },
     {
-      "id": "SET-009",
-      "name": "statusLine 설정",
+      "id": "SET-008",
+      "name": "claudeMdExcludes 설정",
       "severity": "info",
       "check": "json_key_exists",
       "target": "~/.claude/settings.json",
-      "key": "statusLine",
-      "advice": "statusLine을 설정하면 Claude Code 하단에 유용한 정보(모델, 토큰 사용량 등)를 실시간 표시할 수 있습니다."
+      "key": "claudeMdExcludes",
+      "source": "official",
+      "rationale": "공식 문서: claudeMdExcludes는 특정 경로의 CLAUDE.md를 로딩에서 제외합니다. .claudeignore는 공식 기능이 아니며, settings.json의 claudeMdExcludes가 올바른 방법입니다.",
+      "advice": "불필요한 CLAUDE.md 로딩을 방지하려면 settings.json에 claudeMdExcludes를 설정하세요. (.claudeignore는 공식 기능이 아닙니다)"
     },
     {
-      "id": "SET-010",
+      "id": "SET-009",
       "name": "hooks 설정 여부",
       "severity": "info",
       "check": "json_key_exists",
       "target": "~/.claude/settings.json",
       "key": "hooks",
+      "source": "official",
+      "rationale": "공식 문서: hooks는 도구 실행 전후에 셸 명령을 자동 실행합니다. PreToolUse, PostToolUse, SessionStart 등의 이벤트를 지원합니다.",
       "advice": "hooks를 설정하면 도구 실행 전후에 자동 검증, 포맷팅, 알림 등을 수행할 수 있습니다."
+    },
+    {
+      "id": "SET-010",
+      "name": "statusLine 설정",
+      "severity": "info",
+      "check": "json_key_exists",
+      "target": "~/.claude/settings.json",
+      "key": "statusLine",
+      "source": "official",
+      "rationale": "공식 문서: statusLine은 Claude Code 하단에 커스텀 정보를 표시합니다. 셸 명령 결과를 실시간으로 표시할 수 있습니다.",
+      "advice": "statusLine을 설정하면 Claude Code 하단에 유용한 정보(모델, 토큰 사용량 등)를 실시간 표시할 수 있습니다."
     }
   ]
 }

@@ -1,7 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "CLAUDE.md",
-  "description": "CLAUDE.md 파일 품질 진단 룰셋",
+  "description": "CLAUDE.md 파일 품질 진단 룰셋 (Anthropic 공식 문서 기반)",
+  "source": "https://code.claude.com/docs/en/memory.md",
   "rules": [
     {
       "id": "CMD-001",
@@ -9,7 +10,9 @@
       "severity": "critical",
       "check": "file_exists",
       "target": "~/.claude/CLAUDE.md",
-      "advice": "글로벌 CLAUDE.md를 생성하여 Claude Code에 기본 지시사항을 정의하세요. 이 파일이 없으면 Claude는 프로젝트 맥락 없이 동작합니다."
+      "source": "official",
+      "rationale": "User CLAUDE.md는 모든 프로젝트에 적용되는 개인 선호/규칙을 정의합니다.",
+      "advice": "글로벌 CLAUDE.md(~/.claude/CLAUDE.md)를 생성하여 모든 프로젝트에 공통으로 적용할 지시사항을 정의하세요."
     },
     {
       "id": "CMD-002",
@@ -17,19 +20,23 @@
       "severity": "warning",
       "check": "file_exists",
       "target": "{CWD}/CLAUDE.md",
-      "advice": "프로젝트별 CLAUDE.md를 생성하여 해당 프로젝트에 특화된 규칙을 정의하세요. 글로벌 설정만으로는 프로젝트별 맥락 전달이 부족합니다."
+      "source": "official",
+      "rationale": "Project CLAUDE.md는 팀 공유 지침으로, 커밋하여 팀원과 공유할 수 있습니다. Local > Project > User 순으로 우선순위가 적용됩니다.",
+      "advice": "프로젝트 루트에 CLAUDE.md를 생성하여 빌드/테스트 명령, 코딩 표준, 아키텍처 결정, 네이밍 컨벤션을 정의하세요."
     },
     {
       "id": "CMD-003",
-      "name": "글로벌 CLAUDE.md 크기 적정성",
+      "name": "CLAUDE.md 크기 적정성",
       "severity": "warning",
       "check": "line_count",
       "target": "~/.claude/CLAUDE.md",
       "threshold": {
-        "warning": 500,
-        "critical": 1000
+        "warning": 200,
+        "critical": 500
       },
-      "advice": "CLAUDE.md가 너무 크면 매 대화마다 토큰을 낭비합니다. 핵심 지시사항만 남기고 상세 내용은 docs/ 폴더로 분리하세요."
+      "source": "official",
+      "rationale": "공식 문서: '200줄 이하를 목표로 하세요. 더 긴 파일은 컨텍스트를 더 많이 소비하고 준수도가 감소합니다. 200줄을 넘으면 imports나 .claude/rules/로 분할하세요.'",
+      "advice": "CLAUDE.md를 200줄 이하로 유지하세요. 초과 시 .claude/rules/ 또는 외부 파일로 분할을 권장합니다."
     },
     {
       "id": "CMD-004",
@@ -38,7 +45,9 @@
       "check": "has_headers",
       "target": "~/.claude/CLAUDE.md",
       "min_headers": 3,
-      "advice": "마크다운 헤더(#, ##)로 섹션을 구분하세요. 구조화된 CLAUDE.md는 Claude가 지시사항을 더 정확히 파악합니다."
+      "source": "official",
+      "rationale": "공식 문서: '마크다운 헤더와 불릿으로 그룹화하세요.' 구조화된 CLAUDE.md는 Claude의 지시사항 준수도를 높입니다.",
+      "advice": "마크다운 헤더(#, ##)와 불릿으로 섹션을 구분하세요."
     },
     {
       "id": "CMD-005",
@@ -47,7 +56,9 @@
       "check": "duplicate_check",
       "target_global": "~/.claude/CLAUDE.md",
       "target_project": "{CWD}/CLAUDE.md",
-      "advice": "글로벌과 프로젝트 CLAUDE.md에 중복 내용이 있습니다. 공통 규칙은 글로벌에, 프로젝트 특화 규칙만 프로젝트 파일에 두세요."
+      "source": "official",
+      "rationale": "공식 문서에 따르면 User/Project/Local은 각각 다른 역할을 가집니다. 중복은 토큰 낭비이며 충돌 시 우선순위 혼란을 야기합니다.",
+      "advice": "공통 규칙은 글로벌(User)에, 프로젝트 특화 규칙은 프로젝트 CLAUDE.md에 두세요. 충돌하는 규칙은 제거하세요."
     },
     {
       "id": "CMD-006",
@@ -55,8 +66,10 @@
       "severity": "info",
       "check": "vague_terms",
       "target": "~/.claude/CLAUDE.md",
-      "patterns": ["적절히", "필요시", "상황에 따라", "가능하면", "경우에 따라", "적당히", "알아서"],
-      "advice": "모호한 표현은 Claude가 임의로 해석합니다. '적절히' 대신 '최대 3개까지'처럼 구체적인 기준을 명시하세요."
+      "patterns": ["적절히", "필요시", "상황에 따라", "가능하면", "경우에 따라", "적당히", "알아서", "properly", "as needed", "if necessary"],
+      "source": "official",
+      "rationale": "공식 문서: '구체적으로 작성하세요. \"Use 2-space indentation\"(좋음) vs \"Format code properly\"(나쁨).'",
+      "advice": "모호한 표현 대신 구체적인 기준을 명시하세요. 예: '적절히 포맷' → '2칸 들여쓰기, Prettier 사용'"
     },
     {
       "id": "CMD-007",
@@ -65,10 +78,12 @@
       "check": "token_estimate",
       "target": "~/.claude/CLAUDE.md",
       "threshold": {
-        "info": 1000,
-        "warning": 3000
+        "info": 500,
+        "warning": 1500
       },
-      "advice": "CLAUDE.md의 예상 토큰 수가 높습니다. 매 대화 시작 시 이 토큰이 소비되므로, 불필요한 내용을 줄이면 비용을 절약할 수 있습니다."
+      "source": "derived",
+      "rationale": "공식 문서에서 200줄 이하를 권장하며, 일반적인 CLAUDE.md의 평균 토큰 밀도(약 1.3토큰/단어)를 고려한 임계값. 200줄 x 약 8단어/줄 x 1.3 ≈ 2,080토큰이 상한선.",
+      "advice": "매 대화 시작 시 CLAUDE.md 토큰이 소비됩니다. 불필요한 내용(코드 예시, 반복 설명)을 줄여 비용을 절약하세요."
     },
     {
       "id": "CMD-008",
@@ -76,29 +91,34 @@
       "severity": "info",
       "check": "code_block_ratio",
       "target": "~/.claude/CLAUDE.md",
-      "threshold": 50,
-      "advice": "코드 블록이 전체의 50%를 초과합니다. 예시 코드는 토큰을 많이 소비하므로, 핵심 예시만 남기고 나머지는 외부 파일로 분리하세요."
+      "threshold": 40,
+      "source": "best-practice",
+      "rationale": "코드 블록은 일반 텍스트보다 토큰 밀도가 높습니다. 공식 문서에서 200줄 제한을 권장하므로, 코드 블록 비중이 높으면 실질적인 지시사항 공간이 줄어듭니다.",
+      "advice": "코드 블록이 전체의 40%를 초과합니다. 핵심 예시만 남기고 나머지는 .claude/rules/ 또는 외부 파일로 분리하세요."
     },
     {
       "id": "CMD-009",
-      "name": "외부 파일 참조 활용",
-      "severity": "info",
+      "name": "프로젝트 CLAUDE.md 크기 적정성",
+      "severity": "warning",
       "check": "line_count",
-      "target": "~/.claude/CLAUDE.md",
+      "target": "{CWD}/CLAUDE.md",
       "threshold": {
-        "warning": 300,
-        "critical": 600
+        "warning": 200,
+        "critical": 500
       },
-      "context": "external_ref",
-      "advice": "내용이 길다면 docs/ 폴더에 상세 문서를 분리하고 CLAUDE.md에서 참조하세요. Claude는 필요시 참조 파일을 읽을 수 있습니다."
+      "source": "official",
+      "rationale": "공식 문서의 200줄 권장은 파일 단위 적용. 프로젝트 CLAUDE.md도 동일한 기준이 적용됩니다.",
+      "advice": "프로젝트 CLAUDE.md도 200줄 이하로 유지하세요. 상세 내용은 .claude/rules/로 분할하세요."
     },
     {
       "id": "CMD-010",
-      "name": ".claudeignore 존재",
+      "name": "충돌하는 규칙 여부",
       "severity": "warning",
-      "check": "file_exists",
-      "target": "{CWD}/.claudeignore",
-      "advice": ".claudeignore 파일을 생성하여 불필요한 파일(node_modules, dist, .git 등)을 Claude의 탐색 범위에서 제외하세요. 컨텍스트 오염을 방지합니다."
+      "check": "consistency_check",
+      "target": "~/.claude/CLAUDE.md",
+      "source": "official",
+      "rationale": "공식 문서: '일관성: 충돌하는 규칙을 제거하세요.' CLAUDE.md 내 상반되는 지시는 Claude의 동작을 불안정하게 만듭니다.",
+      "advice": "CLAUDE.md 내에서 서로 모순되는 지시사항이 없는지 확인하세요."
     }
   ]
 }

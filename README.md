@@ -18,8 +18,8 @@ A diagnostic skill for Claude Code that analyzes your configuration files (CLAUD
 | Level | Scope | Items |
 |-------|-------|-------|
 | 1 | CLAUDE.md | File quality, token efficiency, structure, duplicates (10 rules) |
-| 2 | Skills & Agents | Level 1 + custom skills, agents, commands validation (+ 7 rules) |
-| 3 | Comprehensive | Level 2 + settings.json, permissions, memory, plugins (+ 10 rules) |
+| 2 | Skills & Agents | Level 1 + custom skills, agents, memory validation (+ 7 rules) |
+| 3 | Comprehensive | Level 2 + settings.json, permissions, plugins, hooks (+ 10 rules) |
 
 ## Grading
 
@@ -62,49 +62,75 @@ In a Claude Code session:
 3. HTML report opens automatically in your browser
 4. Terminal shows a brief summary
 
+## Standards & Sources
+
+All diagnostic rules are based on **Anthropic's official Claude Code documentation**. Each rule includes a `source` field indicating its basis:
+
+| Source | Meaning |
+|--------|---------|
+| `official` | Directly from Anthropic's official documentation |
+| `derived` | Logically derived from official guidelines (e.g., applying the 200-line rule to agent prompts) |
+| `best-practice` | Industry best practices aligned with official recommendations |
+
+### Key Official Standards Applied
+
+| Standard | Official Guidance | Source |
+|----------|-------------------|--------|
+| CLAUDE.md line limit | **200 lines per file** — longer files consume more context and reduce compliance | [Memory & CLAUDE.md docs](https://docs.anthropic.com/en/docs/claude-code/memory) |
+| CLAUDE.md structure | Use markdown headers and bullets to group instructions | [Memory docs](https://docs.anthropic.com/en/docs/claude-code/memory) |
+| CLAUDE.md specificity | Be specific: "Use 2-space indentation" (good) vs "Format code properly" (bad) | [Memory docs](https://docs.anthropic.com/en/docs/claude-code/memory) |
+| CLAUDE.md hierarchy | Priority: Managed > Local > Project > User. Avoid duplication across levels | [Memory docs](https://docs.anthropic.com/en/docs/claude-code/memory) |
+| CLAUDE.md exclusion | Use `claudeMdExcludes` in settings.json (NOT .claudeignore) | [Settings docs](https://docs.anthropic.com/en/docs/claude-code/settings) |
+| SKILL.md fields | All frontmatter fields are optional; only `description` (250 chars) is recommended | [Skills docs](https://docs.anthropic.com/en/docs/claude-code/skills) |
+| Commands → Skills | Commands are legacy and have been merged into Skills | [Skills docs](https://docs.anthropic.com/en/docs/claude-code/skills) |
+| MEMORY.md limits | 200 lines / 25KB loading limit for MEMORY.md index file | [Memory docs](https://docs.anthropic.com/en/docs/claude-code/memory) |
+| Settings priority | Managed > Local > Project > User (4-tier hierarchy) | [Settings docs](https://docs.anthropic.com/en/docs/claude-code/settings) |
+| Permissions | `allow` for pre-approval, `deny` for blocking. Managed deny cannot be overridden | [Permissions docs](https://docs.anthropic.com/en/docs/claude-code/permissions) |
+| Hooks | Shell commands triggered on PreToolUse, PostToolUse, SessionStart events | [Hooks docs](https://docs.anthropic.com/en/docs/claude-code/hooks) |
+
 ## Diagnosis Rules
 
 ### Level 1: CLAUDE.md
 
-| ID | Rule | Severity |
-|----|------|----------|
-| CMD-001 | Global CLAUDE.md exists | Critical |
-| CMD-002 | Project CLAUDE.md exists | Warning |
-| CMD-003 | CLAUDE.md size (< 500 lines) | Warning |
-| CMD-004 | Section structure (headers) | Warning |
-| CMD-005 | Global-project duplication | Warning |
-| CMD-006 | Vague instructions | Info |
-| CMD-007 | Token efficiency estimate | Info |
-| CMD-008 | Code block ratio (< 50%) | Info |
-| CMD-009 | External file references | Info |
-| CMD-010 | .claudeignore exists | Warning |
+| ID | Rule | Severity | Source |
+|----|------|----------|--------|
+| CMD-001 | Global CLAUDE.md exists | Critical | official |
+| CMD-002 | Project CLAUDE.md exists | Warning | official |
+| CMD-003 | CLAUDE.md size (< 200 lines) | Warning | official |
+| CMD-004 | Section structure (headers) | Warning | official |
+| CMD-005 | Global-project duplication | Warning | official |
+| CMD-006 | Vague instructions | Info | official |
+| CMD-007 | Token efficiency estimate | Info | derived |
+| CMD-008 | Code block ratio (< 40%) | Info | best-practice |
+| CMD-009 | Project CLAUDE.md size (< 200 lines) | Warning | official |
+| CMD-010 | Consistency check (conflicting rules) | Warning | official |
 
 ### Level 2: Skills & Agents
 
-| ID | Rule | Severity |
-|----|------|----------|
-| SKA-001 | Custom skills exist | Info |
-| SKA-002 | Custom agents exist | Info |
-| SKA-003 | Custom commands exist | Info |
-| SKA-004 | SKILL.md frontmatter validity | Warning |
-| SKA-005 | Agent prompt size (< 500 lines) | Warning |
-| SKA-006 | Excessive allowed-tools | Warning |
-| SKA-007 | Learned skills usage | Info |
+| ID | Rule | Severity | Source |
+|----|------|----------|--------|
+| SKA-001 | Custom skills exist | Info | official |
+| SKA-002 | Custom agents exist | Info | official |
+| SKA-003 | Commands → Skills migration | Warning | official |
+| SKA-004 | SKILL.md description exists | Warning | official |
+| SKA-005 | Agent prompt size (< 200 lines) | Warning | derived |
+| SKA-006 | Allowed-tools configuration | Warning | official |
+| SKA-007 | Memory system usage | Info | official |
 
 ### Level 3: Settings
 
-| ID | Rule | Severity |
-|----|------|----------|
-| SET-001 | settings.json validity | Critical |
-| SET-002 | Model configuration | Info |
-| SET-003 | Excessive permissions.allow | Warning |
-| SET-004 | Dangerous command patterns | Critical |
-| SET-005 | Deny list configuration | Info |
-| SET-006 | Plugin installation status | Info |
-| SET-007 | Memory utilization | Info |
-| SET-008 | Per-project settings | Info |
-| SET-009 | StatusLine configuration | Info |
-| SET-010 | Hooks configuration | Info |
+| ID | Rule | Severity | Source |
+|----|------|----------|--------|
+| SET-001 | settings.json validity | Critical | official |
+| SET-002 | Model configuration | Info | official |
+| SET-003 | Excessive permissions.allow | Warning | official |
+| SET-004 | Dangerous command patterns | Critical | best-practice |
+| SET-005 | Deny list configuration | Info | official |
+| SET-006 | Plugin installation status | Info | official |
+| SET-007 | Per-project settings | Info | official |
+| SET-008 | claudeMdExcludes configuration | Info | official |
+| SET-009 | Hooks configuration | Info | official |
+| SET-010 | StatusLine configuration | Info | official |
 
 ## Project Structure
 

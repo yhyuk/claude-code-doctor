@@ -1,7 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "스킬/에이전트",
-  "description": "커스텀 스킬, 에이전트, 커맨드 구성 진단 룰셋",
+  "description": "커스텀 스킬, 에이전트, 메모리 구성 진단 룰셋 (Anthropic 공식 문서 기반)",
+  "source": "https://code.claude.com/docs/en/skills.md, https://code.claude.com/docs/en/agents.md, https://code.claude.com/docs/en/memory.md",
   "rules": [
     {
       "id": "SKA-001",
@@ -9,6 +10,8 @@
       "severity": "info",
       "check": "count_items",
       "target": "~/.claude/skills/*/SKILL.md",
+      "source": "official",
+      "rationale": "공식 문서: 스킬은 반복 워크플로우를 슬래시 커맨드로 등록하여 자동화합니다. ~/.claude/skills/ 또는 .claude/skills/에 SKILL.md로 정의합니다.",
       "advice": "커스텀 스킬을 만들면 반복 작업을 자동화할 수 있습니다. 자주 하는 작업(코드 리뷰, 테스트 생성 등)을 스킬로 만들어보세요."
     },
     {
@@ -17,24 +20,30 @@
       "severity": "info",
       "check": "count_items",
       "target": "~/.claude/agents/*.md",
+      "source": "official",
+      "rationale": "공식 문서: 에이전트는 특정 역할에 특화된 지시사항 세트입니다. ~/.claude/agents/ 또는 .claude/agents/에 마크다운으로 정의합니다.",
       "advice": "커스텀 에이전트를 정의하면 특정 역할(시니어 리뷰어, 보안 전문가 등)에 특화된 AI를 활용할 수 있습니다."
     },
     {
       "id": "SKA-003",
-      "name": "커스텀 커맨드 존재",
-      "severity": "info",
-      "check": "count_items",
-      "target": "~/.claude/commands/*.md",
-      "advice": "커스텀 커맨드로 자주 사용하는 워크플로우를 슬래시 커맨드로 만들 수 있습니다."
+      "name": "커맨드→스킬 마이그레이션",
+      "severity": "warning",
+      "check": "directory_exists",
+      "target": "~/.claude/commands/",
+      "source": "official",
+      "rationale": "공식 문서: 'Commands have been merged into Skills.' 기존 commands/ 디렉토리는 레거시이며, skills/로 마이그레이션이 권장됩니다.",
+      "advice": "commands/ 폴더가 존재합니다. 공식 문서에 따르면 커맨드는 스킬로 통합되었습니다. ~/.claude/skills/로 마이그레이션하세요."
     },
     {
       "id": "SKA-004",
-      "name": "스킬 SKILL.md 유효성",
+      "name": "스킬 SKILL.md description 존재",
       "severity": "warning",
       "check": "skill_frontmatter",
       "target": "~/.claude/skills/*/SKILL.md",
-      "required_fields": ["name", "description", "allowed-tools"],
-      "advice": "SKILL.md에 name, description, allowed-tools 필드가 필수입니다. 누락 시 스킬이 정상 동작하지 않을 수 있습니다."
+      "required_fields": ["description"],
+      "source": "official",
+      "rationale": "공식 문서: SKILL.md의 YAML frontmatter 필드는 모두 선택사항이지만, description(250자 이하)을 권장합니다. name, allowed-tools 등은 필수가 아닙니다.",
+      "advice": "SKILL.md에 description 필드를 추가하세요(250자 이하 권장). 다른 필드(name, allowed-tools)는 선택사항입니다."
     },
     {
       "id": "SKA-005",
@@ -43,27 +52,33 @@
       "check": "line_count",
       "target": "~/.claude/agents/*.md",
       "threshold": {
-        "warning": 500,
-        "critical": 1000
+        "warning": 200,
+        "critical": 500
       },
-      "advice": "에이전트 프롬프트가 너무 길면 에이전트 실행 시마다 토큰을 과다 소비합니다. 핵심 역할과 규칙만 남기세요."
+      "source": "derived",
+      "rationale": "공식 CLAUDE.md 가이드에서 200줄 이하를 권장하며, 에이전트 프롬프트도 동일한 토큰 효율성 원칙이 적용됩니다. 에이전트 실행마다 전체 프롬프트가 로드됩니다.",
+      "advice": "에이전트 프롬프트를 200줄 이하로 유지하세요. 핵심 역할과 규칙만 남기고 상세 내용은 외부 파일로 분리하세요."
     },
     {
       "id": "SKA-006",
-      "name": "allowed-tools 과다 허용",
+      "name": "allowed-tools 설정 확인",
       "severity": "warning",
       "check": "allowed_tools_check",
       "target": "~/.claude/skills/*/SKILL.md",
-      "max_tools": 10,
-      "advice": "allowed-tools에 너무 많은 도구를 허용하면 의도치 않은 동작이 발생할 수 있습니다. 필요한 도구만 최소한으로 허용하세요."
+      "max_tools": 15,
+      "source": "official",
+      "rationale": "공식 문서: allowed-tools는 스킬 실행 시 사전 승인(pre-approval)하는 도구 목록입니다. 제한이 아닌 허용이므로, 불필요한 도구까지 나열하면 의도치 않은 동작이 발생할 수 있습니다.",
+      "advice": "allowed-tools에 스킬에 실제 필요한 도구만 나열하세요. 이 목록은 사전 승인(pre-approval)이므로, 과도한 허용은 안전성을 낮출 수 있습니다."
     },
     {
       "id": "SKA-007",
-      "name": "학습된 스킬 활용",
+      "name": "메모리 시스템 활용",
       "severity": "info",
-      "check": "count_items",
-      "target": "~/.claude/skills/learned/*.md",
-      "advice": "학습된 스킬(learned skills)은 반복 패턴을 자동으로 기억합니다. /learn-eval로 새 패턴을 추출해보세요."
+      "check": "memory_system",
+      "target": "~/.claude/projects/*/memory/MEMORY.md",
+      "source": "official",
+      "rationale": "공식 문서: 메모리 시스템은 MEMORY.md 인덱스 파일과 개별 메모리 파일로 구성됩니다. MEMORY.md는 200줄/25KB 로딩 제한이 있으며, user/feedback/project/reference 4가지 타입을 지원합니다.",
+      "advice": "메모리 시스템(MEMORY.md + 개별 메모리 파일)을 활용하면 대화 간 컨텍스트를 유지할 수 있습니다. MEMORY.md는 200줄 이하로 유지하세요."
     }
   ]
 }
