@@ -3,7 +3,7 @@
   "name": "claude-code-doctor",
   "description": "Claude Code 설정 진단 및 맞춤 추천 도구 — CLAUDE.md, settings, skills, agents를 분석하여 시각적 HTML 리포트를 생성합니다",
   "owner": {
-    "name": "imform-mm-2101"
+    "name": "yhyuk"
   },
   "metadata": {
     "description": "Claude Code 설정 진단 및 맞춤 추천 도구"
@@ -15,10 +15,10 @@
       "description": "CLAUDE.md 품질, 토큰 효율성, 보안, 스킬/에이전트 구성을 진단하고 프로젝트 타입별 맞춤 추천을 제공하는 진단 스킬",
       "version": "1.0.0",
       "author": {
-        "name": "imform-mm-2101"
+        "name": "yhyuk"
       },
-      "homepage": "https://github.com/imform-mm-2101/claude-code-doctor",
-      "repository": "https://github.com/imform-mm-2101/claude-code-doctor",
+      "homepage": "https://github.com/yhyuk/claude-code-doctor",
+      "repository": "https://github.com/yhyuk/claude-code-doctor",
       "license": "MIT",
       "keywords": [
         "diagnostics",
