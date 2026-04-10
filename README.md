@@ -6,12 +6,44 @@ A diagnostic skill for Claude Code that analyzes your configuration files (CLAUD
 
 [한국어](./README.ko.md)
 
-## Features
+## Overview
+
+Claude Code Doctor scans your Claude Code setup and diagnoses misconfigurations, missing best practices, and optimization opportunities. It produces an HTML report with grades, charts, and per-rule details — opening automatically in your browser.
 
 - **3-Level Diagnosis** — Choose the depth of analysis
 - **Project Type Detection** — Auto-detects your tech stack and provides tailored recommendations
 - **Visual HTML Report** — Opens automatically in your browser with grades, charts, and detailed results
 - **Dark/Light Mode** — Follows your system preference
+
+## Pipeline Architecture
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Orch as /claude-doctor
+    participant Detect as Detector
+    participant Engine as Rule Engine
+    participant Score as Scorer
+    participant Report as Reporter
+
+    User->>Orch: /claude-doctor
+    Orch->>User: Select diagnosis level (1/2/3)
+    User->>Orch: Level selected
+    Orch->>Detect: Detect project type
+    Detect->>Orch: Project type (e.g. Next.js, Spring Boot)
+    Orch->>Engine: Run rules (level-based)
+    Engine->>Orch: Check results (pass/warning/fail)
+    Orch->>Score: Calculate score
+    Score->>Orch: Grade (A-F)
+    Orch->>Report: Generate HTML report
+    Report->>Orch: Report file
+    Orch->>User: Open report in browser
+    alt Auto-fixable issues found
+        Orch->>User: Suggest auto-fix
+        User->>Orch: Approve
+        Orch->>Orch: Apply fixes
+    end
+```
 
 ## Diagnosis Levels
 
@@ -30,10 +62,6 @@ A diagnostic skill for Claude Code that analyzes your configuration files (CLAUD
 | C | 60-74 | Average, improvements recommended |
 | D | 40-59 | Below average, needs attention |
 | F | 0-39 | Missing basic configurations |
-
-## Supported Project Types
-
-Next.js, React (Vite), Node.js, Spring Boot, Python, Rust, Go, and Generic fallback.
 
 ## Installation
 
@@ -61,6 +89,10 @@ In a Claude Code session:
 2. Wait for analysis to complete
 3. HTML report opens automatically in your browser
 4. Terminal shows a brief summary
+
+## Supported Project Types
+
+Next.js, React (Vite), Node.js, Spring Boot, Python, Rust, Go, and Generic fallback.
 
 ## Standards & Sources
 
