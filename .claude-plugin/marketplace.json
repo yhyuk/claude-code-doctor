@@ -13,7 +13,7 @@
       "name": "claude-code-doctor",
       "source": "./",
       "description": "CLAUDE.md 품질, 토큰 효율성, 보안, 스킬/에이전트 구성을 진단하고 프로젝트 타입별 맞춤 추천을 제공하는 진단 스킬",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "author": {
         "name": "yhyuk"
       },

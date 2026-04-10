@@ -1,0 +1,29 @@
+# Claude Code Doctor v2.0.0 Progress
+
+## Iteration 1 - 완료
+- PRD 생성: 7개 사용자 스토리 정의
+- US-001: CLAUDE.md 생성 (107줄, 5섹션)
+- US-002: recommendations.json에 nuxtjs, angular, ruby, dotnet 4개 타입 추가 (총 12타입)
+- US-003: SKILL.md Step 7 Auto-fix 기능 추가 (CMD-004, CMD-006, CMD-008, SKA-003)
+- US-004: 전체 버전 2.0.0 통일 (7개 파일), report.html/SKILL.md에 {{VERSION}} 플레이스홀더
+- US-005: 27개 룰에 weight 필드 추가, 가중치 기반 채점 로직 (레벨별 카테고리 가중 평균)
+- US-006: 5개 새 룰 추가 (CMD-011, CMD-012, SKA-008, SET-011, SET-012), README 양쪽 업데이트
+- US-007: JSON 리포트 출력, 히스토리 트렌드 비교, --quick 모드, TREND_SECTION CSS
+
+## 아키텍트 검증
+- 7개 US 모두 acceptance criteria 충족
+- 검증 등급: STANDARD (Sonnet)
+
+## 변경 파일 목록
+- CLAUDE.md (신규)
+- package.json (version 2.0.0)
+- .claude-plugin/plugin.json (version 2.0.0)
+- .claude-plugin/marketplace.json (version 2.0.0)
+- skills/claude-doctor/SKILL.md (Step 7, --quick, JSON 출력, 트렌드, 채점 로직, check 타입)
+- skills/claude-doctor/rules/claude-md.json (CMD-011, CMD-012, weight)
+- skills/claude-doctor/rules/skills-agents.json (SKA-008, weight)
+- skills/claude-doctor/rules/settings.json (SET-011, SET-012, weight)
+- skills/claude-doctor/rules/recommendations.json (nuxtjs, angular, ruby, dotnet)
+- skills/claude-doctor/templates/report.html ({{VERSION}}, {{TREND_SECTION}}, 트렌드 CSS)
+- README.md (항목 수, 테이블 업데이트)
+- README.ko.md (항목 수, 테이블 업데이트)

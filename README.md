@@ -17,9 +17,9 @@ A diagnostic skill for Claude Code that analyzes your configuration files (CLAUD
 
 | Level | Scope | Items |
 |-------|-------|-------|
-| 1 | CLAUDE.md | File quality, token efficiency, structure, duplicates (10 rules) |
-| 2 | Skills & Agents | Level 1 + custom skills, agents, memory validation (+ 7 rules) |
-| 3 | Comprehensive | Level 2 + settings.json, permissions, plugins, hooks (+ 10 rules) |
+| 1 | CLAUDE.md | File quality, token efficiency, structure, duplicates (12 rules) |
+| 2 | Skills & Agents | Level 1 + custom skills, agents, memory validation (+ 8 rules) |
+| 3 | Comprehensive | Level 2 + settings.json, permissions, plugins, hooks (+ 12 rules) |
 
 ## Grading
 
@@ -104,6 +104,8 @@ All diagnostic rules are based on **Anthropic's official Claude Code documentati
 | CMD-008 | Code block ratio (< 40%) | Info | best-practice |
 | CMD-009 | Project CLAUDE.md size (< 200 lines) | Warning | official |
 | CMD-010 | Consistency check (conflicting rules) | Warning | official |
+| CMD-011 | .claude/rules/ directory usage | Info | official |
+| CMD-012 | CLAUDE.md imports usage | Info | official |
 
 ### Level 2: Skills & Agents
 
@@ -116,6 +118,7 @@ All diagnostic rules are based on **Anthropic's official Claude Code documentati
 | SKA-005 | Agent prompt size (< 200 lines) | Warning | derived |
 | SKA-006 | Allowed-tools configuration | Warning | official |
 | SKA-007 | Memory system usage | Info | official |
+| SKA-008 | Cross-skill allowed-tools conflicts | Warning | derived |
 
 ### Level 3: Settings
 
@@ -131,6 +134,8 @@ All diagnostic rules are based on **Anthropic's official Claude Code documentati
 | SET-008 | claudeMdExcludes configuration | Info | official |
 | SET-009 | Hooks configuration | Info | official |
 | SET-010 | StatusLine configuration | Info | official |
+| SET-011 | Settings file conflict detection | Warning | derived |
+| SET-012 | MCP server configuration | Info | official |
 
 ## Project Structure
 

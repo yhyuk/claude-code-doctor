@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "2.0.0",
   "category": "CLAUDE.md",
   "description": "CLAUDE.md 파일 품질 진단 룰셋 (Anthropic 공식 문서 기반)",
   "source": "https://code.claude.com/docs/en/memory.md",
@@ -8,6 +8,7 @@
       "id": "CMD-001",
       "name": "글로벌 CLAUDE.md 존재",
       "severity": "critical",
+      "weight": 20,
       "check": "file_exists",
       "target": "~/.claude/CLAUDE.md",
       "source": "official",
@@ -18,6 +19,7 @@
       "id": "CMD-002",
       "name": "프로젝트 CLAUDE.md 존재",
       "severity": "warning",
+      "weight": 8,
       "check": "file_exists",
       "target": "{CWD}/CLAUDE.md",
       "source": "official",
@@ -28,6 +30,7 @@
       "id": "CMD-003",
       "name": "CLAUDE.md 크기 적정성",
       "severity": "warning",
+      "weight": 6,
       "check": "line_count",
       "target": "~/.claude/CLAUDE.md",
       "threshold": {
@@ -42,6 +45,7 @@
       "id": "CMD-004",
       "name": "섹션 구조화 여부",
       "severity": "warning",
+      "weight": 5,
       "check": "has_headers",
       "target": "~/.claude/CLAUDE.md",
       "min_headers": 3,
@@ -53,6 +57,7 @@
       "id": "CMD-005",
       "name": "글로벌-프로젝트 중복 내용",
       "severity": "warning",
+      "weight": 5,
       "check": "duplicate_check",
       "target_global": "~/.claude/CLAUDE.md",
       "target_project": "{CWD}/CLAUDE.md",
@@ -64,6 +69,7 @@
       "id": "CMD-006",
       "name": "모호한 지시사항",
       "severity": "info",
+      "weight": 3,
       "check": "vague_terms",
       "target": "~/.claude/CLAUDE.md",
       "patterns": ["적절히", "필요시", "상황에 따라", "가능하면", "경우에 따라", "적당히", "알아서", "properly", "as needed", "if necessary"],
@@ -75,6 +81,7 @@
       "id": "CMD-007",
       "name": "토큰 효율성 추정",
       "severity": "info",
+      "weight": 2,
       "check": "token_estimate",
       "target": "~/.claude/CLAUDE.md",
       "threshold": {
@@ -89,6 +96,7 @@
       "id": "CMD-008",
       "name": "코드 블록 비중",
       "severity": "info",
+      "weight": 2,
       "check": "code_block_ratio",
       "target": "~/.claude/CLAUDE.md",
       "threshold": 40,
@@ -100,6 +108,7 @@
       "id": "CMD-009",
       "name": "프로젝트 CLAUDE.md 크기 적정성",
       "severity": "warning",
+      "weight": 6,
       "check": "line_count",
       "target": "{CWD}/CLAUDE.md",
       "threshold": {
@@ -114,11 +123,35 @@
       "id": "CMD-010",
       "name": "충돌하는 규칙 여부",
       "severity": "warning",
+      "weight": 5,
       "check": "consistency_check",
       "target": "~/.claude/CLAUDE.md",
       "source": "official",
       "rationale": "공식 문서: '일관성: 충돌하는 규칙을 제거하세요.' CLAUDE.md 내 상반되는 지시는 Claude의 동작을 불안정하게 만듭니다.",
       "advice": "CLAUDE.md 내에서 서로 모순되는 지시사항이 없는지 확인하세요."
+    },
+    {
+      "id": "CMD-011",
+      "name": ".claude/rules/ 디렉토리 활용",
+      "severity": "info",
+      "weight": 3,
+      "check": "count_items",
+      "target": "{CWD}/.claude/rules/*.md",
+      "source": "official",
+      "rationale": "공식 문서: CLAUDE.md가 200줄을 초과하면 .claude/rules/ 디렉토리로 분할을 권장합니다. rules/ 파일은 관련 파일 편집 시에만 자동 로드되어 토큰을 절약합니다.",
+      "advice": ".claude/rules/ 디렉토리를 활용하면 CLAUDE.md의 부담을 줄이고 파일별 맞춤 규칙을 적용할 수 있습니다."
+    },
+    {
+      "id": "CMD-012",
+      "name": "CLAUDE.md imports 활용",
+      "severity": "info",
+      "weight": 2,
+      "check": "pattern_match",
+      "target": "{CWD}/CLAUDE.md",
+      "pattern": "@\\S+\\.md",
+      "source": "official",
+      "rationale": "공식 문서: CLAUDE.md에서 @path 구문으로 외부 파일을 import할 수 있습니다. 긴 지시사항을 분리하여 토큰 효율성을 높일 수 있습니다.",
+      "advice": "CLAUDE.md가 길어지면 @path import를 활용하여 외부 파일로 분리하세요. 예: @.claude/rules/coding-style.md"
     }
   ]
 }

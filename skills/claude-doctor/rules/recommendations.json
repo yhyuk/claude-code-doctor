@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "프로젝트 타입별 CLAUDE.md 추천 룰셋",
   "project_types": {
     "nextjs": {
@@ -141,6 +141,86 @@
           "description": "Go 표준 프로젝트 구조",
           "keywords": ["layout", "structure", "구조", "cmd", "internal"],
           "example": "## 프로젝트 레이아웃\n- cmd/: 메인 애플리케이션 진입점\n- internal/: 비공개 패키지\n- pkg/: 외부 공개 패키지\n- 에러 처리: errors.Is/As 활용, 센티널 에러 정의"
+        }
+      ]
+    },
+    "nuxtjs": {
+      "label": "Nuxt.js",
+      "detect_files": ["nuxt.config.ts", "nuxt.config.js"],
+      "recommended_sections": [
+        {
+          "id": "REC-NUXT-001",
+          "section": "컴포넌트/페이지 구조",
+          "description": "pages/, components/ 디렉토리 구조 및 Composition API 활용 가이드",
+          "keywords": ["component", "컴포넌트", "page", "페이지", "composition api", "vue"],
+          "example": "## 컴포넌트/페이지 구조\n- pages/: 파일 기반 라우팅 (자동 라우트 생성)\n- components/: 자동 임포트 활성화, PascalCase 네이밍\n- composables/: 재사용 로직, use 접두사 (예: useUser)\n- Composition API 사용 (<script setup> 권장)\n- layouts/: 공통 레이아웃 분리"
+        },
+        {
+          "id": "REC-NUXT-002",
+          "section": "데이터 패칭",
+          "description": "useFetch, useAsyncData, Nitro 서버 라우트 활용 가이드",
+          "keywords": ["fetch", "useFetch", "useAsyncData", "nitro", "server", "api"],
+          "example": "## 데이터 패칭\n- useFetch: 컴포넌트 내 SSR/CSR 통합 데이터 패칭\n- useAsyncData: 커스텀 비동기 로직, 캐시 키 명시\n- $fetch: 클라이언트 사이드 단순 요청\n- Nitro 서버 라우트: server/api/ 하위에 *.ts 파일\n- 서버 미들웨어: server/middleware/ 하위 정의"
+        }
+      ]
+    },
+    "angular": {
+      "label": "Angular",
+      "detect_files": ["angular.json"],
+      "recommended_sections": [
+        {
+          "id": "REC-ANGULAR-001",
+          "section": "모듈/컴포넌트 구조",
+          "description": "Standalone Components와 NgModules 전략, 컴포넌트 설계 가이드",
+          "keywords": ["module", "component", "standalone", "ngmodule", "directive", "pipe"],
+          "example": "## 모듈/컴포넌트 구조\n- Standalone Components 기본 사용 (Angular 17+)\n- 기능별 폴더 구조: feature/, shared/, core/\n- 컴포넌트 네이밍: PascalCase + Component 접미사\n- Smart/Dumb 컴포넌트 패턴 준수\n- Lazy Loading: loadComponent() / loadChildren() 활용"
+        },
+        {
+          "id": "REC-ANGULAR-002",
+          "section": "상태 관리",
+          "description": "NgRx, Signals, Services를 활용한 상태 관리 전략",
+          "keywords": ["state", "상태", "ngrx", "signals", "service", "rxjs", "store"],
+          "example": "## 상태 관리\n- 단순 로컬 상태: Signals (signal, computed, effect)\n- 전역 상태: NgRx Store (Actions, Reducers, Selectors, Effects)\n- 서비스 상태: Injectable Service + BehaviorSubject\n- HTTP 통신: HttpClient + RxJS 파이프 활용\n- 비동기 처리: async pipe 우선 사용 (수동 구독 지양)"
+        }
+      ]
+    },
+    "ruby": {
+      "label": "Ruby",
+      "detect_files": ["Gemfile"],
+      "recommended_sections": [
+        {
+          "id": "REC-RUBY-001",
+          "section": "코드 스타일",
+          "description": "RuboCop 기반 Ruby 스타일 가이드 및 코딩 컨벤션",
+          "keywords": ["style", "스타일", "rubocop", "convention", "lint", "format"],
+          "example": "## 코드 스타일\n- RuboCop 필수 적용 (.rubocop.yml 프로젝트 루트)\n- Ruby 공식 스타일 가이드 준수\n- 들여쓰기: 2 spaces (탭 사용 금지)\n- 메서드명/변수명: snake_case\n- 클래스명/모듈명: CamelCase\n- 문자열: 싱글 쿼트 기본, 보간 필요시 더블 쿼트"
+        },
+        {
+          "id": "REC-RUBY-002",
+          "section": "테스트 전략",
+          "description": "RSpec, Minitest를 활용한 테스트 작성 가이드",
+          "keywords": ["test", "테스트", "rspec", "minitest", "factory_bot", "coverage"],
+          "example": "## 테스트 전략\n- RSpec 사용 (describe/context/it 구조 준수)\n- FactoryBot으로 테스트 데이터 생성\n- 외부 HTTP: WebMock / VCR 카세트 활용\n- 커버리지: SimpleCov 적용, 목표 90%+\n- Rails: request spec 우선, controller spec 지양\n- 테스트 파일 위치: spec/ (파일명: *_spec.rb)"
+        }
+      ]
+    },
+    "dotnet": {
+      "label": ".NET/C#",
+      "detect_files": ["*.sln", "*.csproj"],
+      "recommended_sections": [
+        {
+          "id": "REC-DOTNET-001",
+          "section": "프로젝트 구조",
+          "description": "Clean Architecture 및 CQRS 패턴 기반 프로젝트 구조 가이드",
+          "keywords": ["architecture", "아키텍처", "clean architecture", "cqrs", "mediatr", "domain"],
+          "example": "## 프로젝트 구조\n- Clean Architecture 레이어 분리:\n  - Domain: 엔티티, 값 객체, 도메인 이벤트\n  - Application: Use Cases, CQRS Commands/Queries (MediatR)\n  - Infrastructure: DB, 외부 서비스, Repository 구현체\n  - Presentation: API Controllers, Minimal API\n- 네이밍: PascalCase (클래스/메서드), camelCase (지역 변수)\n- 비동기: async/await 일관 적용, Task 반환"
+        },
+        {
+          "id": "REC-DOTNET-002",
+          "section": "테스트 전략",
+          "description": "xUnit, NUnit, Moq를 활용한 단위/통합 테스트 가이드",
+          "keywords": ["test", "테스트", "xunit", "nunit", "moq", "integration", "coverage"],
+          "example": "## 테스트 전략\n- 단위 테스트: xUnit + Moq (인터페이스 모킹)\n- 통합 테스트: WebApplicationFactory + Testcontainers\n- 네이밍: MethodName_StateUnderTest_ExpectedBehavior\n- FluentAssertions로 가독성 있는 단언문 작성\n- 커버리지 목표: 80%+ (Coverlet + ReportGenerator)\n- 테스트 프로젝트: {프로젝트명}.Tests 네이밍 규칙"
         }
       ]
     },
