@@ -15,6 +15,10 @@ Claude Code Doctor scans your Claude Code setup and diagnoses misconfigurations,
 - **Visual HTML Report** — Opens automatically in your browser with grades, charts, and detailed results
 - **Dark/Light Mode** — Follows your system preference
 
+## Report Preview
+
+![Claude Code Doctor - 설정 진단 리포트](./assets/report-preview.png)
+
 ## Pipeline Architecture
 
 ```mermaid
