@@ -19,6 +19,10 @@ Claude Code Doctor scans your Claude Code setup and diagnoses misconfigurations,
 
 ![Claude Code Doctor - 설정 진단 리포트](./assets/report-preview.png)
 
+![Claude Code Doctor - 점수 변화 추이 및 주요 개선사항](./assets/report-score-trend.png)
+
+![Claude Code Doctor - Spring Boot 맞춤 추천 및 상세 진단 결과](./assets/report-recommendations.png)
+
 ## Pipeline Architecture
 
 ```mermaid
