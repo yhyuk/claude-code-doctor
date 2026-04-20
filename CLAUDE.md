@@ -14,9 +14,9 @@ claude-code-doctor/
     claude-doctor/
       SKILL.md                        — 스킬 진입점 및 워크플로우 정의
       rules/
-        claude-md.json                — Level 1 룰셋 (CLAUDE.md 품질 진단, 10개 룰)
-        skills-agents.json            — Level 2 룰셋 (스킬/에이전트 구성 진단, 7개 룰)
-        settings.json                 — Level 3 룰셋 (settings.json, permissions, memory 진단, 10개 룰)
+        claude-md.json                — Level 1 룰셋 (CLAUDE.md 품질 진단, 12개 룰)
+        skills-agents.json            — Level 2 룰셋 (스킬/에이전트 구성 진단, 8개 룰)
+        settings.json                 — Level 3 룰셋 (settings.json, permissions, memory 진단, 12개 룰)
         recommendations.json          — 프로젝트 타입별 추천 룰셋
       templates/
         report.html                   — HTML 리포트 템플릿 (CSS/JS 인라인, 외부 CDN 없음)
@@ -77,7 +77,8 @@ claude-code-doctor/
   `{{TIMESTAMP}}`, `{{PROJECT_PATH}}`, `{{PROJECT_TYPE}}`, `{{GRADE}}`, `{{SCORE}}`,
   `{{GRADE_COLOR}}`, `{{CRITICAL_COUNT}}`, `{{WARNING_COUNT}}`, `{{INFO_COUNT}}`,
   `{{PASS_COUNT}}`, `{{TOTAL_COUNT}}`, `{{CATEGORY_CARDS}}`, `{{TOP_ISSUES}}`,
-  `{{RECOMMENDATIONS}}`, `{{DETAIL_SECTIONS}}`, `{{DIAGNOSIS_LEVEL}}`, `{{SCORE_DEG}}`
+  `{{RECOMMENDATIONS}}`, `{{DETAIL_SECTIONS}}`, `{{DIAGNOSIS_LEVEL}}`, `{{SCORE_DEG}}`,
+  `{{VERSION}}`, `{{TREND_SECTION}}`
 
 ## 빌드 및 검증
 

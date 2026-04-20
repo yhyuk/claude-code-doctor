@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "claude-code-doctor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Claude Code 설정 진단 및 맞춤 추천 도구",
   "author": {
     "name": "yhyuk"

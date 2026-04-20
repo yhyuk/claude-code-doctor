@@ -1,6 +1,6 @@
 {
   "name": "claude-code-doctor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Claude Code 설정 진단 및 맞춤 추천 도구. CLAUDE.md, settings, skills, agents 등을 분석하여 토큰 효율성, 보안, 베스트 프랙티스를 진단하고 시각적 HTML 리포트를 생성합니다.",
   "author": {
     "name": "yhyuk"

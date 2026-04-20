@@ -68,19 +68,26 @@ Spring 프로젝트의 경우 build.gradle/pom.xml 내 `org.springframework` 문
 
 1. 룰셋 JSON 파일을 Read로 읽는다
 2. 각 룰의 `check` 타입에 따라 검사를 수행한다:
-   - `file_exists`: 대상 파일 존재 여부 (Glob 사용)
-   - `line_count`: 파일 줄 수 확인 (Bash: `wc -l`)
+   - `file_exists`: 대상 파일 존재 여부 (Glob 사용). 파일이 없으면 fail.
+   - `line_count`: 파일 줄 수 확인 (Bash: `wc -l`). `threshold.warning`/`threshold.critical` 두 임계값이 있을 경우: warning 초과 시 warning 판정, critical 초과 시 fail 판정으로 구분 처리한다.
    - `has_headers`: 마크다운 헤더(`#`, `##`) 존재 여부 (Grep 사용)
-   - `duplicate_check`: 글로벌-프로젝트 CLAUDE.md 간 유사 블록 탐지 (Read로 양쪽 읽고 비교)
+   - `duplicate_check`: 글로벌-프로젝트 CLAUDE.md 간 유사 블록 탐지. 룰의 `target_global`/`target_project` 필드를 각각 Read로 읽어 비교한다.
    - `vague_terms`: 모호한 표현 탐지 (Grep: "적절히|필요시|상황에 따라|가능하면|경우에 따라")
    - `token_estimate`: 토큰 수 추정 (Bash: `wc -w` 후 x1.3)
    - `code_block_ratio`: 코드 블록 비율 (Grep으로 ``` 블록 카운트)
    - `json_valid`: JSON 파싱 유효성 (Bash: `python3 -c "import json; json.load(open('...'))"`)
+   - `json_key_exists`: settings.json에서 특정 키 존재 여부 확인 (Bash: `python3 -c "import json; d=json.load(open('...')); print('exists' if '{key}' in d else 'missing')"`). 룰의 `key` 필드에 확인할 키 이름이 지정된다. 키가 없으면 info 판정.
+   - `permissions_count`: settings.json의 permissions.allow 배열 항목 수 확인 (Bash: python3으로 JSON 파싱 후 len 계산). `threshold.warning`/`threshold.critical` 임계값과 비교한다.
    - `pattern_match`: 특정 패턴 존재 여부 (Grep 사용)
    - `count_items`: 디렉토리 내 항목 수 (Glob 사용)
    - `dangerous_patterns`: 위험 패턴 탐지 (Grep: "rm -rf|sudo|curl.*\\|.*sh")
+   - `directory_exists`: 대상 디렉토리 존재 여부 (Glob 사용). **판정이 역전된다**: 디렉토리가 존재하면 fail(레거시 경고), 없으면 pass. SKA-003처럼 레거시 경로 탐지에 사용된다.
+   - `skill_frontmatter`: 스킬 SKILL.md 파일의 YAML frontmatter에서 필수 필드 존재 여부 확인 (Read로 파일 읽고 `---` 블록 내 필드 파싱). 룰의 `required_fields` 배열에 확인할 필드 목록이 지정된다.
+   - `allowed_tools_check`: 스킬 SKILL.md의 `allowed-tools` 목록 항목 수 확인 (Read로 frontmatter 파싱). 룰의 `max_tools` 값 초과 시 warning 판정.
+   - `memory_system`: 메모리 시스템 파일(MEMORY.md) 존재 여부 확인 (Glob 사용). 없으면 info 판정.
+   - `consistency_check`: 내부 충돌 규칙 탐지
    - `cross_skill_tools_check`: 여러 스킬의 SKILL.md를 읽어 allowed-tools 간 중복/충돌 비교
-   - `settings_conflict_check`: 4단계 settings 파일을 모두 읽어 동일 키 중복 감지
+   - `settings_conflict_check`: 4단계 settings 파일을 모두 읽어 동일 키 중복 감지. 룰의 `target_files` 배열 필드에 비교할 파일 목록이 지정된다.
    - `mcp_server_check`: settings.json의 mcpServers 키 존재 및 구성 유효성 확인
 3. 각 항목에 pass/warning/fail 판정을 내린다
 4. 추천 룰셋을 읽고 프로젝트 타입에 맞는 누락 섹션을 식별한다
@@ -90,8 +97,11 @@ Spring 프로젝트의 경우 build.gradle/pom.xml 내 `org.springframework` 문
 가중치 기반 채점 방식:
 
 1. 해당 Level에 포함된 모든 룰의 weight 합계를 구한다 (= 만점)
-2. fail 항목의 weight를 합산한다 (= 감점)
-3. 점수 = ((만점 - 감점) / 만점) * 100, 최저 0점 클램핑
+2. 감점 계산:
+   - `fail` 판정: weight 전체를 감점
+   - `warning` 판정: weight의 50%를 감점 (소수점 반올림)
+   - `pass` 판정: 감점 없음
+3. 점수 = ((만점 - 총감점) / 만점) * 100, 최저 0점 클램핑
 4. 카테고리별 점수를 각각 산출한다:
    - CLAUDE.md 카테고리: CMD-* 룰들의 가중치 기반 점수
    - 스킬/에이전트 카테고리: SKA-* 룰들의 가중치 기반 점수
@@ -253,8 +263,15 @@ Step 5 사전 준비에서 검색한 이전 JSON 리포트가 있을 경우:
 
 ### Step 6: 결과 출력
 
-1. Bash로 `open {HTML파일경로}` 실행하여 브라우저 오픈 (macOS)
-   - Linux의 경우 `xdg-open` 사용
+1. Bash로 OS를 감지하여 브라우저 오픈:
+   ```bash
+   OS=$(uname -s)
+   if [ "$OS" = "Darwin" ]; then
+     open {HTML파일경로}
+   else
+     xdg-open {HTML파일경로}
+   fi
+   ```
 2. 터미널에 10줄 이내 요약 출력:
 
 ```
